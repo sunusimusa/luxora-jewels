@@ -32,6 +32,160 @@
 
 <body>
 
+  <script>
+async function loadLuxoraImages() {
+
+  try {
+
+    const response =
+      await fetch("/api/site-images");
+
+    const data =
+      await response.json();
+
+    if (!data.success) {
+      return;
+    }
+
+
+    const images =
+      data.images;
+
+
+    // ==========================
+    // HERO
+    // ==========================
+
+    const hero =
+      document.getElementById(
+        "luxoraHeroImage"
+      );
+
+
+    if (hero && images.hero) {
+
+      hero.src =
+        images.hero;
+
+    }
+
+
+    // ==========================
+    // ABOUT
+    // ==========================
+
+    const about =
+      document.getElementById(
+        "luxoraAboutImage"
+      );
+
+
+    if (about && images.about) {
+
+      about.src =
+        images.about;
+
+    }
+
+
+    // ==========================
+    // COLLECTIONS
+    // ==========================
+
+    const collection1 =
+      document.getElementById(
+        "luxoraCollection1"
+      );
+
+
+    if (
+      collection1 &&
+      images.collection1
+    ) {
+
+      collection1.src =
+        images.collection1;
+
+    }
+
+
+    const collection2 =
+      document.getElementById(
+        "luxoraCollection2"
+      );
+
+
+    if (
+      collection2 &&
+      images.collection2
+    ) {
+
+      collection2.src =
+        images.collection2;
+
+    }
+
+
+    const collection3 =
+      document.getElementById(
+        "luxoraCollection3"
+      );
+
+
+    if (
+      collection3 &&
+      images.collection3
+    ) {
+
+      collection3.src =
+        images.collection3;
+
+    }
+
+
+    // ==========================
+    // GALLERY
+    // ==========================
+
+    for (
+      let i = 1;
+      i <= 5;
+      i++
+    ) {
+
+      const image =
+        document.getElementById(
+          `luxoraGallery${i}`
+        );
+
+
+      if (
+        image &&
+        images[`gallery${i}`]
+      ) {
+
+        image.src =
+          images[`gallery${i}`];
+
+      }
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "LUXORA IMAGE ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+loadLuxoraImages();
+</script>
+
 
   <!-- =================================
        HEADER
@@ -133,10 +287,10 @@
       <!-- LUXORA BANNER -->
 
       <img
-        src="images/luxora-banner.png"
-        alt="LUXORA JEWELS Premium Jewelry"
-        class="hero-image"
-      >
+  id="luxoraHeroImage"
+  src="images/luxora-banner.png"
+  alt="LUXORA JEWELS Premium Jewelry"
+>
 
 
       <!-- DARK OVERLAY -->
