@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>LUXORA JEWELS — Admin</title>
 
+
   <style>
+
     * {
       margin: 0;
       padding: 0;
@@ -14,211 +22,497 @@
       font-family: Arial, sans-serif;
     }
 
+
     body {
+
       min-height: 100vh;
-      background: #0b0b0b;
+
+      background:
+        linear-gradient(
+          135deg,
+          #080808,
+          #17120a
+        );
+
       color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+
       padding: 20px;
+
     }
 
-    .admin-box {
+
+    .container {
+
       width: 100%;
-      max-width: 420px;
-      background: #151515;
-      border: 1px solid rgba(212,175,55,.35);
-      border-radius: 18px;
-      padding: 30px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      max-width: 900px;
+
+      margin: auto;
+
     }
+
+
+    .login-box {
+
+      max-width: 420px;
+
+      margin:
+        80px auto;
+
+      background: #151515;
+
+      padding: 30px;
+
+      border-radius: 18px;
+
+      border:
+        1px solid
+        rgba(212,175,55,.35);
+
+      box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.5);
+
+    }
+
 
     .logo {
+
       text-align: center;
+
       color: #d4af37;
+
       font-size: 28px;
+
       font-weight: bold;
-      letter-spacing: 2px;
+
+      letter-spacing: 3px;
+
       margin-bottom: 8px;
+
     }
+
 
     .subtitle {
+
       text-align: center;
+
       color: #aaa;
+
       margin-bottom: 28px;
+
     }
+
 
     label {
+
       display: block;
+
       margin-bottom: 8px;
+
       color: #ddd;
+
       font-size: 14px;
+
     }
 
-    input {
+
+    input,
+    select {
+
       width: 100%;
-      padding: 14px;
-      margin-bottom: 18px;
-      border: 1px solid #333;
-      border-radius: 10px;
+
+      padding: 13px;
+
+      margin-bottom: 15px;
+
       background: #0d0d0d;
+
       color: #fff;
+
+      border:
+        1px solid #333;
+
+      border-radius: 10px;
+
       outline: none;
+
     }
 
-    input:focus {
-      border-color: #d4af37;
+
+    input:focus,
+    select:focus {
+
+      border-color:
+        #d4af37;
+
     }
+
 
     button {
-      width: 100%;
-      padding: 14px;
+
       border: none;
+
       border-radius: 10px;
-      background: linear-gradient(135deg, #d4af37, #f3d477);
-      color: #111;
-      font-weight: bold;
+
+      padding: 13px 18px;
+
       cursor: pointer;
-      font-size: 15px;
+
+      font-weight: bold;
+
     }
 
-    button:hover {
-      opacity: .9;
+
+    .gold-btn {
+
+      width: 100%;
+
+      background:
+        linear-gradient(
+          135deg,
+          #d4af37,
+          #f3d477
+        );
+
+      color: #111;
+
     }
 
-    .message {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 14px;
-      min-height: 20px;
-    }
-
-    .dashboard {
-      display: none;
-    }
-
-    .welcome {
-      text-align: center;
-      color: #ddd;
-      margin-bottom: 25px;
-    }
 
     .logout {
-      margin-top: 20px;
+
       background: #292929;
+
       color: #fff;
+
     }
 
-    .upload-area {
-      border: 1px dashed #555;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 20px;
+
+    #loginMessage,
+    #managerMessage {
+
+      text-align: center;
+
+      margin-top: 15px;
+
+      color: #ddd;
+
+      min-height: 20px;
+
     }
 
-    .upload-area h3 {
-      color: #d4af37;
-      margin-bottom: 15px;
-    }
 
-    #preview {
-      width: 100%;
-      max-height: 220px;
-      object-fit: cover;
-      border-radius: 10px;
-      margin: 15px 0;
+    .dashboard {
+
       display: none;
+
     }
+
+
+    .header {
+
+      background: #151515;
+
+      border:
+        1px solid
+        rgba(212,175,55,.25);
+
+      padding: 20px;
+
+      border-radius: 16px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 15px;
+
+      margin-bottom: 20px;
+
+    }
+
+
+    .header h1 {
+
+      color: #d4af37;
+
+      font-size: 24px;
+
+    }
+
+
+    .header p {
+
+      color: #aaa;
+
+      margin-top: 5px;
+
+    }
+
+
+    .manager {
+
+      background: #151515;
+
+      border:
+        1px solid
+        rgba(212,175,55,.25);
+
+      padding: 20px;
+
+      border-radius: 16px;
+
+    }
+
+
+    .manager h2 {
+
+      color: #d4af37;
+
+      margin-bottom: 20px;
+
+    }
+
+
+    .slot {
+
+      background: #0d0d0d;
+
+      border:
+        1px solid #292929;
+
+      border-radius: 14px;
+
+      padding: 15px;
+
+      margin-bottom: 18px;
+
+    }
+
+
+    .slot-title {
+
+      color: #f0d477;
+
+      font-weight: bold;
+
+      margin-bottom: 12px;
+
+      font-size: 17px;
+
+    }
+
+
+    .preview {
+
+      width: 100%;
+
+      height: 180px;
+
+      object-fit: cover;
+
+      border-radius: 10px;
+
+      background: #191919;
+
+      display: none;
+
+      margin-bottom: 12px;
+
+    }
+
+
+    .no-image {
+
+      height: 120px;
+
+      border:
+        1px dashed #444;
+
+      border-radius: 10px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      color: #777;
+
+      margin-bottom: 12px;
+
+    }
+
+
+    .actions {
+
+      display: flex;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+    }
+
+
+    .upload-btn {
+
+      background: #d4af37;
+
+      color: #111;
+
+    }
+
+
+    .delete-btn {
+
+      background: #3a1717;
+
+      color: #ffb0b0;
+
+    }
+
+
+    .file-input {
+
+      display: none;
+
+    }
+
+
+    @media (max-width: 600px) {
+
+      .header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+      }
+
+      .logout {
+
+        width: 100%;
+
+      }
+
+    }
+
   </style>
+
 </head>
+
 
 <body>
 
-  <div class="admin-box">
 
-    <!-- LOGIN -->
-    <div id="loginSection">
+  <!-- LOGIN -->
 
-      <div class="logo">
-        LUXORA
-      </div>
+  <div
+    id="loginSection"
+    class="login-box"
+  >
 
-      <div class="subtitle">
-        Jewelry Website Admin
-      </div>
+    <div class="logo">
+      LUXORA
+    </div>
 
-      <form id="loginForm">
-
-        <label for="username">
-          Username
-        </label>
-
-        <input
-          type="text"
-          id="username"
-          placeholder="Enter username"
-          required
-        >
-
-        <label for="password">
-          Password
-        </label>
-
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter password"
-          required
-        >
-
-        <button type="submit">
-          Login
-        </button>
-
-      </form>
-
-      <div id="loginMessage" class="message"></div>
-
+    <div class="subtitle">
+      Jewelry Website Admin
     </div>
 
 
-    <!-- DASHBOARD -->
-    <div id="dashboardSection" class="dashboard">
+    <form id="loginForm">
 
-      <div class="logo">
-        LUXORA
-      </div>
+      <label>
+        Username
+      </label>
 
-      <div class="welcome">
-        Welcome to your Admin Dashboard
-      </div>
+      <input
+        type="text"
+        id="username"
+        required
+        placeholder="Admin username"
+      >
 
-      <div class="upload-area">
 
-        <h3>
-          Upload Website Image
-        </h3>
+      <label>
+        Password
+      </label>
 
-        <input
-          type="file"
-          id="imageInput"
-          accept="image/png,image/jpeg,image/webp"
+      <input
+        type="password"
+        id="password"
+        required
+        placeholder="Admin password"
+      >
+
+
+      <button
+        type="submit"
+        class="gold-btn"
+      >
+        Login
+      </button>
+
+    </form>
+
+
+    <div id="loginMessage"></div>
+
+  </div>
+
+
+  <!-- DASHBOARD -->
+
+  <div
+    id="dashboardSection"
+    class="dashboard"
+  >
+
+    <div class="container">
+
+
+      <div class="header">
+
+        <div>
+
+          <h1>
+            LUXORA JEWELS
+          </h1>
+
+          <p>
+            Website Photo Manager
+          </p>
+
+        </div>
+
+
+        <button
+          id="logoutButton"
+          class="logout"
         >
-
-        <img id="preview" alt="Image preview">
-
-        <button id="uploadButton">
-          Upload Image
+          Logout
         </button>
 
-        <div id="uploadMessage" class="message"></div>
-
       </div>
 
-      <button id="logoutButton" class="logout">
-        Logout
-      </button>
+
+      <div class="manager">
+
+        <h2>
+          Manage Website Images
+        </h2>
+
+
+        <div id="slotsContainer"></div>
+
+
+        <div id="managerMessage"></div>
+
+      </div>
 
     </div>
 
@@ -227,225 +521,732 @@
 
 <script>
 
-const loginSection = document.getElementById("loginSection");
-const dashboardSection = document.getElementById("dashboardSection");
 
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
-
-const imageInput = document.getElementById("imageInput");
-const preview = document.getElementById("preview");
-const uploadButton = document.getElementById("uploadButton");
-const uploadMessage = document.getElementById("uploadMessage");
-
-const logoutButton = document.getElementById("logoutButton");
+const loginSection =
+  document.getElementById(
+    "loginSection"
+  );
 
 
-// ==========================
-// CHECK LOGIN
-// ==========================
+const dashboardSection =
+  document.getElementById(
+    "dashboardSection"
+  );
+
+
+const loginForm =
+  document.getElementById(
+    "loginForm"
+  );
+
+
+const loginMessage =
+  document.getElementById(
+    "loginMessage"
+  );
+
+
+const slotsContainer =
+  document.getElementById(
+    "slotsContainer"
+  );
+
+
+const managerMessage =
+  document.getElementById(
+    "managerMessage"
+  );
+
+
+const logoutButton =
+  document.getElementById(
+    "logoutButton"
+  );
+
+
+// ========================================
+// SLOT NAMES
+// ========================================
+
+const SLOT_NAMES = {
+
+  hero:
+    "🏠 Hero Image",
+
+  about:
+    "👩 About Image",
+
+  collection1:
+    "💎 Collection 1",
+
+  collection2:
+    "💎 Collection 2",
+
+  collection3:
+    "💎 Collection 3",
+
+  gallery1:
+    "🖼️ Gallery 1",
+
+  gallery2:
+    "🖼️ Gallery 2",
+
+  gallery3:
+    "🖼️ Gallery 3",
+
+  gallery4:
+    "🖼️ Gallery 4",
+
+  gallery5:
+    "🖼️ Gallery 5"
+
+};
+
+
+// ========================================
+// LOGIN CHECK
+// ========================================
 
 function checkLogin() {
 
-  const token = localStorage.getItem("luxoraAdminToken");
+  const token =
+    localStorage.getItem(
+      "luxoraAdminToken"
+    );
+
 
   if (token) {
 
-    loginSection.style.display = "none";
-    dashboardSection.style.display = "block";
+    showDashboard();
 
   }
 
 }
 
+
 checkLogin();
 
 
-// ==========================
+// ========================================
+// SHOW DASHBOARD
+// ========================================
+
+function showDashboard() {
+
+  loginSection.style.display =
+    "none";
+
+  dashboardSection.style.display =
+    "block";
+
+  loadImages();
+
+}
+
+
+// ========================================
 // LOGIN
-// ==========================
+// ========================================
 
-loginForm.addEventListener("submit", async function(e) {
+loginForm.addEventListener(
+  "submit",
+  async function(e) {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  const username =
-    document.getElementById("username").value.trim();
 
-  const password =
-    document.getElementById("password").value;
+    const username =
+      document
+        .getElementById("username")
+        .value
+        .trim();
 
-  loginMessage.textContent = "Logging in...";
 
-  try {
+    const password =
+      document
+        .getElementById("password")
+        .value;
 
-    const response = await fetch("/api/admin/login", {
 
-      method: "POST",
+    loginMessage.textContent =
+      "Logging in...";
 
-      headers: {
-        "Content-Type": "application/json"
-      },
 
-      body: JSON.stringify({
-        username,
-        password
-      })
+    try {
 
-    });
+      const response =
+        await fetch(
+          "/api/admin/login",
+          {
 
-    const data = await response.json();
+            method: "POST",
 
-    if (!response.ok || !data.success) {
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+
+              username,
+              password
+
+            })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok ||
+          !data.success) {
+
+        loginMessage.textContent =
+          data.message ||
+          "Login failed";
+
+        return;
+
+      }
+
+
+      localStorage.setItem(
+        "luxoraAdminToken",
+        data.token
+      );
+
+
+      showDashboard();
+
+
+    } catch (error) {
+
+      console.error(error);
 
       loginMessage.textContent =
-        data.message || "Login failed";
-
-      return;
+        "Unable to connect to server";
 
     }
 
-    localStorage.setItem(
-      "luxoraAdminToken",
-      data.token
-    );
-
-    loginSection.style.display = "none";
-    dashboardSection.style.display = "block";
-
-    loginMessage.textContent = "";
-
-  } catch (error) {
-
-    console.error(error);
-
-    loginMessage.textContent =
-      "Unable to connect to server";
-
   }
-
-});
-
-
-// ==========================
-// IMAGE PREVIEW
-// ==========================
-
-imageInput.addEventListener("change", function() {
-
-  const file = imageInput.files[0];
-
-  if (!file) {
-    preview.style.display = "none";
-    return;
-  }
-
-  const imageURL =
-    URL.createObjectURL(file);
-
-  preview.src = imageURL;
-  preview.style.display = "block";
-
-});
+);
 
 
-// ==========================
-// UPLOAD
-// ==========================
+// ========================================
+// LOAD IMAGES
+// ========================================
 
-uploadButton.addEventListener("click", async function() {
-
-  const file = imageInput.files[0];
-
-  if (!file) {
-
-    uploadMessage.textContent =
-      "Please select an image first.";
-
-    return;
-
-  }
+async function loadImages() {
 
   const token =
-    localStorage.getItem("luxoraAdminToken");
+    localStorage.getItem(
+      "luxoraAdminToken"
+    );
+
 
   if (!token) {
 
-    uploadMessage.textContent =
-      "Please login first.";
-
     return;
 
   }
 
-  const formData = new FormData();
 
-  formData.append("image", file);
+  managerMessage.textContent =
+    "Loading images...";
 
-  uploadMessage.textContent =
-    "Uploading...";
 
   try {
 
-    const response = await fetch("/api/admin/upload", {
+    const response =
+      await fetch(
+        "/api/admin/images",
+        {
 
-      method: "POST",
+          headers: {
 
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
+            Authorization:
+              `Bearer ${token}`
 
-      body: formData
+          }
 
-    });
+        }
+      );
 
-    const data = await response.json();
+
+    const data =
+      await response.json();
+
 
     if (response.status === 401) {
 
-      localStorage.removeItem(
-        "luxoraAdminToken"
-      );
-
-      location.reload();
+      logout();
 
       return;
 
     }
 
-    if (!response.ok || !data.success) {
 
-      uploadMessage.textContent =
-        data.message || "Upload failed";
+    if (!data.success) {
+
+      managerMessage.textContent =
+        data.message ||
+        "Unable to load images";
 
       return;
 
     }
 
-    uploadMessage.textContent =
-      "Image uploaded successfully ✅";
 
-    console.log("Cloudinary URL:", data.url);
+    renderSlots(
+      data.images
+    );
 
-    imageInput.value = "";
+
+    managerMessage.textContent =
+      "";
 
   } catch (error) {
 
     console.error(error);
 
-    uploadMessage.textContent =
-      "Upload failed. Please try again.";
+    managerMessage.textContent =
+      "Unable to load images";
 
   }
 
-});
+}
 
 
-// ==========================
+// ========================================
+// RENDER SLOTS
+// ========================================
+
+function renderSlots(images) {
+
+  slotsContainer.innerHTML = "";
+
+
+  for (
+    const slot in SLOT_NAMES
+  ) {
+
+    const data =
+      images[slot];
+
+
+    const box =
+      document.createElement(
+        "div"
+      );
+
+
+    box.className =
+      "slot";
+
+
+    const title =
+      document.createElement(
+        "div"
+      );
+
+
+    title.className =
+      "slot-title";
+
+
+    title.textContent =
+      SLOT_NAMES[slot];
+
+
+    box.appendChild(title);
+
+
+    if (
+      data &&
+      data.exists &&
+      data.url
+    ) {
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+
+      image.className =
+        "preview";
+
+
+      image.src =
+        data.url;
+
+
+      image.style.display =
+        "block";
+
+
+      image.alt =
+        SLOT_NAMES[slot];
+
+
+      box.appendChild(image);
+
+    } else {
+
+      const empty =
+        document.createElement(
+          "div"
+        );
+
+
+      empty.className =
+        "no-image";
+
+
+      empty.textContent =
+        "No image uploaded";
+
+
+      box.appendChild(empty);
+
+    }
+
+
+    const actions =
+      document.createElement(
+        "div"
+      );
+
+
+    actions.className =
+      "actions";
+
+
+    const fileInput =
+      document.createElement(
+        "input"
+      );
+
+
+    fileInput.type =
+      "file";
+
+
+    fileInput.accept =
+      "image/png,image/jpeg,image/webp";
+
+
+    fileInput.className =
+      "file-input";
+
+
+    fileInput.id =
+      `file-${slot}`;
+
+
+    const uploadButton =
+      document.createElement(
+        "button"
+      );
+
+
+    uploadButton.className =
+      "upload-btn";
+
+
+    uploadButton.textContent =
+      data &&
+      data.exists
+        ? "Change Image"
+        : "Upload Image";
+
+
+    uploadButton.onclick =
+      function() {
+
+        fileInput.click();
+
+      };
+
+
+    fileInput.addEventListener(
+      "change",
+      function() {
+
+        if (
+          fileInput.files.length
+        ) {
+
+          uploadImage(
+            slot,
+            fileInput.files[0]
+          );
+
+        }
+
+      }
+    );
+
+
+    actions.appendChild(
+      uploadButton
+    );
+
+
+    if (
+      data &&
+      data.exists
+    ) {
+
+      const deleteButton =
+        document.createElement(
+          "button"
+        );
+
+
+      deleteButton.className =
+        "delete-btn";
+
+
+      deleteButton.textContent =
+        "Delete";
+
+
+      deleteButton.onclick =
+        function() {
+
+          deleteImage(slot);
+
+        };
+
+
+      actions.appendChild(
+        deleteButton
+      );
+
+    }
+
+
+    actions.appendChild(
+      fileInput
+    );
+
+
+    box.appendChild(actions);
+
+
+    slotsContainer.appendChild(
+      box
+    );
+
+  }
+
+}
+
+
+// ========================================
+// UPLOAD IMAGE
+// ========================================
+
+async function uploadImage(
+  slot,
+  file
+) {
+
+  const token =
+    localStorage.getItem(
+      "luxoraAdminToken"
+    );
+
+
+  if (!token) {
+
+    logout();
+
+    return;
+
+  }
+
+
+  managerMessage.textContent =
+    `Uploading ${SLOT_NAMES[slot]}...`;
+
+
+  const formData =
+    new FormData();
+
+
+  formData.append(
+    "image",
+    file
+  );
+
+
+  try {
+
+    const response =
+      await fetch(
+        `/api/admin/images/${slot}`,
+        {
+
+          method: "POST",
+
+          headers: {
+
+            Authorization:
+              `Bearer ${token}`
+
+          },
+
+          body: formData
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (response.status === 401) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    if (!response.ok ||
+        !data.success) {
+
+      managerMessage.textContent =
+        data.message ||
+        "Upload failed";
+
+      return;
+
+    }
+
+
+    managerMessage.textContent =
+      `${SLOT_NAMES[slot]} updated successfully ✅`;
+
+
+    await loadImages();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    managerMessage.textContent =
+      "Image upload failed";
+
+  }
+
+}
+
+
+// ========================================
+// DELETE IMAGE
+// ========================================
+
+async function deleteImage(
+  slot
+) {
+
+  const confirmed =
+    confirm(
+      `Delete ${SLOT_NAMES[slot]}?`
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  const token =
+    localStorage.getItem(
+      "luxoraAdminToken"
+    );
+
+
+  try {
+
+    const response =
+      await fetch(
+        `/api/admin/images/${slot}`,
+        {
+
+          method: "DELETE",
+
+          headers: {
+
+            Authorization:
+              `Bearer ${token}`
+
+          }
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (response.status === 401) {
+
+      logout();
+
+      return;
+
+    }
+
+
+    if (!response.ok ||
+        !data.success) {
+
+      managerMessage.textContent =
+        data.message ||
+        "Delete failed";
+
+      return;
+
+    }
+
+
+    managerMessage.textContent =
+      `${SLOT_NAMES[slot]} deleted successfully ✅`;
+
+
+    await loadImages();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    managerMessage.textContent =
+      "Image deletion failed";
+
+  }
+
+}
+
+
+// ========================================
 // LOGOUT
-// ==========================
+// ========================================
 
-logoutButton.addEventListener("click", function() {
+function logout() {
 
   localStorage.removeItem(
     "luxoraAdminToken"
@@ -453,9 +1254,16 @@ logoutButton.addEventListener("click", function() {
 
   location.reload();
 
-});
+}
+
+
+logoutButton.addEventListener(
+  "click",
+  logout
+);
 
 </script>
 
 </body>
-  </html>
+
+</html>
