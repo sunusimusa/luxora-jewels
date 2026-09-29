@@ -1,1 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>LUXORA JEWELS — Admin</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0b0b0b;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .admin-box {
+      width: 100%;
+      max-width: 420px;
+      background: #151515;
+      border: 1px solid rgba(212,175,55,.35);
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+
+    .logo {
+      text-align: center;
+      color: #d4af37;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #aaa;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ddd;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 18px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: #0d0d0d;
+      color: #fff;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #d4af37;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #d4af37, #f3d477);
+      color: #111;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button:hover {
+      opacity: .9;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    .dashboard {
+      display: none;
+    }
+
+    .welcome {
+      text-align: center;
+      color: #ddd;
+      margin-bottom: 25px;
+    }
+
+    .logout {
+      margin-top: 20px;
+      background: #292929;
+      color: #fff;
+    }
+
+    .upload-area {
+      border: 1px dashed #555;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .upload-area h3 {
+      color: #d4af37;
+      margin-bottom: 15px;
+    }
+
+    #preview {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 15px 0;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="admin-box">
+
+    <!-- LOGIN -->
+    <div id="loginSection">
+
+      <div class="logo">
+        LUXORA
+      </div>
+
+      <div class="subtitle">
+        Jewelry Website Admin
+      </div>
+
+      <form id="loginForm">
+
+        <label for="username">
+          Username
+        </label>
+
+        <input
+          type="text"
+          id="username"
+          placeholder="Enter username"
+          required
+        >
+
+        <label for="password">
+          Password
+        </label>
+
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter password"
+          required
+        >
+
+        <button type="submit">
+          Login
+        </button>
+
+      </form>
+
+      <div id="loginMessage" class="message"></div>
+
+    </div>
+
+
+    <!-- DASHBOARD -->
+    <div id="dashboardSection" class="dashboard">
+
+      <div class="logo">
+        LUXORA
+      </div>
+
+      <div class="welcome">
+        Welcome to your Admin Dashboard
+      </div>
+
+      <div class="upload-area">
+
+        <h3>
+          Upload Website Image
+        </h3>
+
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/png,image/jpeg,image/webp"
+        >
+
+        <img id="preview" alt="Image preview">
+
+        <button id="uploadButton">
+          Upload Image
+        </button>
+
+        <div id="uploadMessage" class="message"></div>
+
+      </div>
+
+      <button id="logoutButton" class="logout">
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+
+<script>
+
+const loginSection = document.getElementById("loginSection");
+const dashboardSection = document.getElementById("dashboardSection");
+
+const loginForm = document.getElementById("loginForm");
+const loginMessage = document.getElementById("loginMessage");
+
+const imageInput = document.getElementById("imageInput");
+const preview = document.getElementById("preview");
+const uploadButton = document.getElementById("uploadButton");
+const uploadMessage = document.getElementById("uploadMessage");
+
+const logoutButton = document.getElementById("logoutButton");
+
+
+// ==========================
+// CHECK LOGIN
+// ==========================
+
+function checkLogin() {
+
+  const token = localStorage.getItem("luxoraAdminToken");
+
+  if (token) {
+
+    loginSection.style.display = "none";
+    dashboardSection.style.display = "block";
+
+  }
+
+}
+
+checkLogin();
+
+
+// ==========================
+// LOGIN
+// ==========================
+
+loginForm.addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+
+  const username =
+    document.getElementById("username").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  loginMessage.textContent = "Logging in...";
+
+  try {
+
+    const response = await fetch("/api/admin/login", {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        username,
+        password
+      })
+
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+
+      loginMessage.textContent =
+        data.message || "Login failed";
+
+      return;
+
+    }
+
+    localStorage.setItem(
+      "luxoraAdminToken",
+      data.token
+    );
+
+    loginSection.style.display = "none";
+    dashboardSection.style.display = "block";
+
+    loginMessage.textContent = "";
+
+  } catch (error) {
+
+    console.error(error);
+
+    loginMessage.textContent =
+      "Unable to connect to server";
+
+  }
+
+});
+
+
+// ==========================
+// IMAGE PREVIEW
+// ==========================
+
+imageInput.addEventListener("change", function() {
+
+  const file = imageInput.files[0];
+
+  if (!file) {
+    preview.style.display = "none";
+    return;
+  }
+
+  const imageURL =
+    URL.createObjectURL(file);
+
+  preview.src = imageURL;
+  preview.style.display = "block";
+
+});
+
+
+// ==========================
+// UPLOAD
+// ==========================
+
+uploadButton.addEventListener("click", async function() {
+
+  const file = imageInput.files[0];
+
+  if (!file) {
+
+    uploadMessage.textContent =
+      "Please select an image first.";
+
+    return;
+
+  }
+
+  const token =
+    localStorage.getItem("luxoraAdminToken");
+
+  if (!token) {
+
+    uploadMessage.textContent =
+      "Please login first.";
+
+    return;
+
+  }
+
+  const formData = new FormData();
+
+  formData.append("image", file);
+
+  uploadMessage.textContent =
+    "Uploading...";
+
+  try {
+
+    const response = await fetch("/api/admin/upload", {
+
+      method: "POST",
+
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+
+      body: formData
+
+    });
+
+    const data = await response.json();
+
+    if (response.status === 401) {
+
+      localStorage.removeItem(
+        "luxoraAdminToken"
+      );
+
+      location.reload();
+
+      return;
+
+    }
+
+    if (!response.ok || !data.success) {
+
+      uploadMessage.textContent =
+        data.message || "Upload failed";
+
+      return;
+
+    }
+
+    uploadMessage.textContent =
+      "Image uploaded successfully ✅";
+
+    console.log("Cloudinary URL:", data.url);
+
+    imageInput.value = "";
+
+  } catch (error) {
+
+    console.error(error);
+
+    uploadMessage.textContent =
+      "Upload failed. Please try again.";
+
+  }
+
+});
+
+
+// ==========================
+// LOGOUT
+// ==========================
+
+logoutButton.addEventListener("click", function() {
+
+  localStorage.removeItem(
+    "luxoraAdminToken"
+  );
+
+  location.reload();
+
+});
+
+</script>
+
+</body>
+  </html>
