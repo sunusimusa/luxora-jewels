@@ -8,32 +8,30 @@ const crypto = require("crypto");
 require("dotenv").config();
 
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
 
-// ==========================
+// ========================================
 // MIDDLEWARE
-// ==========================
+// ========================================
 
 app.use(cors());
-
 app.use(express.json());
-
 app.use(express.static(__dirname));
 
 
-// ==========================
+// ========================================
 // CLOUDINARY
-// ==========================
+// ========================================
 
 cloudinary.config({
   secure: true
 });
 
-// ==========================
+
+// ========================================
 // MULTER
-// ==========================
+// ========================================
 
 const upload = multer({
 
@@ -46,15 +44,9 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
 
     if (file.mimetype.startsWith("image/")) {
-
       cb(null, true);
-
     } else {
-
-      cb(
-        new Error("Only image files are allowed")
-      );
-
+      cb(new Error("Only image files are allowed"));
     }
 
   }
@@ -62,11 +54,9 @@ const upload = multer({
 });
 
 
-// ==========================
+// ========================================
 // ADMIN SETTINGS
-// ==========================
-
-// These will come from Render Environment Variables.
+// ========================================
 
 const ADMIN_USERNAME =
   process.env.ADMIN_USERNAME || "admin";
@@ -75,17 +65,79 @@ const ADMIN_PASSWORD =
   process.env.ADMIN_PASSWORD || "change-this-password";
 
 
-// Temporary token storage.
-//
-// Later we can improve this with a stronger
-// persistent authentication system.
-
-const adminTokens = new Set();
+// Token storage
+const adminTokens = new Map();
 
 
-// ==========================
+// ========================================
+// WEBSITE IMAGE SLOTS
+// ========================================
+
+const IMAGE_SLOTS = {
+
+  hero: {
+    name: "Hero Image",
+    publicId: "hero"
+  },
+
+  about: {
+    name: "About Image",
+    publicId: "about"
+  },
+
+  collection1: {
+    name: "Collection 1",
+    publicId: "collection-1"
+  },
+
+  collection2: {
+    name: "Collection 2",
+    publicId: "collection-2"
+  },
+
+  collection3: {
+    name: "Collection 3",
+    publicId: "collection-3"
+  },
+
+  gallery1: {
+    name: "Gallery 1",
+    publicId: "gallery-1"
+  },
+
+  gallery2: {
+    name: "Gallery 2",
+    publicId: "gallery-2"
+  },
+
+  gallery3: {
+    name: "Gallery 3",
+    publicId: "gallery-3"
+  },
+
+  gallery4: {
+    name: "Gallery 4",
+    publicId: "gallery-4"
+  },
+
+  gallery5: {
+    name: "Gallery 5",
+    publicId: "gallery-5"
+  }
+
+};
+
+
+// ========================================
+// CLOUDINARY FOLDER
+// ========================================
+
+const CLOUDINARY_FOLDER = "luxora-jewels";
+
+
+// ========================================
 // ADMIN LOGIN
-// ==========================
+// ========================================
 
 app.post("/api/admin/login", (req, res) => {
 
@@ -96,14 +148,13 @@ app.post("/api/admin/login", (req, res) => {
       password
     } = req.body;
 
+
     if (!username || !password) {
 
       return res.status(400).json({
 
         success: false,
-
-        message:
-          "Username and password are required"
+        message: "Username and password are required"
 
       });
 
@@ -118,9 +169,7 @@ app.post("/api/admin/login", (req, res) => {
       return res.status(401).json({
 
         success: false,
-
-        message:
-          "Invalid username or password"
+        message: "Invalid username or password"
 
       });
 
@@ -131,30 +180,26 @@ app.post("/api/admin/login", (req, res) => {
       crypto.randomBytes(32).toString("hex");
 
 
-    adminTokens.add(token);
+    adminTokens.set(token, {
+      createdAt: Date.now()
+    });
 
 
     res.json({
 
       success: true,
-
       message: "Admin login successful",
-
       token
 
     });
 
   } catch (error) {
 
-    console.error(
-      "ADMIN LOGIN ERROR:",
-      error
-    );
+    console.error("ADMIN LOGIN ERROR:", error);
 
     res.status(500).json({
 
       success: false,
-
       message: "Server error"
 
     });
@@ -164,9 +209,9 @@ app.post("/api/admin/login", (req, res) => {
 });
 
 
-// ==========================
-// ADMIN AUTH MIDDLEWARE
-// ==========================
+// ========================================
+// ADMIN AUTH
+// ========================================
 
 function adminAuth(req, res, next) {
 
@@ -179,7 +224,6 @@ function adminAuth(req, res, next) {
     return res.status(401).json({
 
       success: false,
-
       message: "Admin authentication required"
 
     });
@@ -191,13 +235,35 @@ function adminAuth(req, res, next) {
     authHeader.split(" ")[1];
 
 
-  if (!adminTokens.has(token)) {
+  const session =
+    adminTokens.get(token);
+
+
+  if (!session) {
 
     return res.status(401).json({
 
       success: false,
+      message: "Invalid admin session"
 
-      message: "Invalid or expired admin token"
+    });
+
+  }
+
+
+  // Session expires after 24 hours
+  const sessionAge =
+    Date.now() - session.createdAt;
+
+
+  if (sessionAge > 24 * 60 * 60 * 1000) {
+
+    adminTokens.delete(token);
+
+    return res.status(401).json({
+
+      success: false,
+      message: "Admin session expired"
 
     });
 
@@ -209,26 +275,129 @@ function adminAuth(req, res, next) {
 }
 
 
-// ==========================
-// ADMIN UPLOAD
-// ==========================
+// ========================================
+// GET ALL WEBSITE IMAGES
+// ========================================
+
+app.get(
+  "/api/admin/images",
+  adminAuth,
+  async (req, res) => {
+
+    try {
+
+      const images = {};
+
+
+      for (const [slot, config] of Object.entries(IMAGE_SLOTS)) {
+
+        try {
+
+          const result =
+            await cloudinary.api.resource(
+              `${CLOUDINARY_FOLDER}/${config.publicId}`,
+              {
+                resource_type: "image"
+              }
+            );
+
+
+          images[slot] = {
+
+            exists: true,
+
+            name: config.name,
+
+            url: result.secure_url,
+
+            publicId: result.public_id
+
+          };
+
+        } catch (error) {
+
+          images[slot] = {
+
+            exists: false,
+
+            name: config.name,
+
+            url: "",
+
+            publicId: ""
+
+          };
+
+        }
+
+      }
+
+
+      res.json({
+
+        success: true,
+        images
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "GET IMAGES ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        success: false,
+        message: "Unable to load website images"
+
+      });
+
+    }
+
+  }
+);
+
+
+// ========================================
+// UPLOAD / REPLACE IMAGE
+// ========================================
 
 app.post(
-  "/api/admin/upload",
+  "/api/admin/images/:slot",
   adminAuth,
   upload.single("image"),
   async (req, res) => {
 
     try {
 
+      const slot =
+        req.params.slot;
+
+
+      const config =
+        IMAGE_SLOTS[slot];
+
+
+      if (!config) {
+
+        return res.status(400).json({
+
+          success: false,
+          message: "Invalid image slot"
+
+        });
+
+      }
+
+
       if (!req.file) {
 
         return res.status(400).json({
 
           success: false,
-
-          message:
-            "No image selected"
+          message: "No image selected"
 
         });
 
@@ -243,20 +412,27 @@ app.post(
               cloudinary.uploader.upload_stream(
 
                 {
+
                   folder:
-                    "luxora-jewels"
+                    CLOUDINARY_FOLDER,
+
+                  public_id:
+                    config.publicId,
+
+                  overwrite: true,
+
+                  invalidate: true,
+
+                  resource_type: "image"
+
                 },
 
                 (error, result) => {
 
                   if (error) {
-
                     reject(error);
-
                   } else {
-
                     resolve(result);
-
                   }
 
                 }
@@ -264,9 +440,7 @@ app.post(
               );
 
 
-            stream.end(
-              req.file.buffer
-            );
+            stream.end(req.file.buffer);
 
           }
         );
@@ -277,7 +451,9 @@ app.post(
         success: true,
 
         message:
-          "Image uploaded successfully",
+          `${config.name} updated successfully`,
+
+        slot,
 
         url:
           result.secure_url,
@@ -290,16 +466,14 @@ app.post(
     } catch (error) {
 
       console.error(
-        "UPLOAD ERROR:",
+        "IMAGE UPLOAD ERROR:",
         error
       );
 
       res.status(500).json({
 
         success: false,
-
-        message:
-          "Image upload failed"
+        message: "Image upload failed"
 
       });
 
@@ -309,27 +483,166 @@ app.post(
 );
 
 
-// ==========================
+// ========================================
+// DELETE IMAGE
+// ========================================
+
+app.delete(
+  "/api/admin/images/:slot",
+  adminAuth,
+  async (req, res) => {
+
+    try {
+
+      const slot =
+        req.params.slot;
+
+
+      const config =
+        IMAGE_SLOTS[slot];
+
+
+      if (!config) {
+
+        return res.status(400).json({
+
+          success: false,
+          message: "Invalid image slot"
+
+        });
+
+      }
+
+
+      const result =
+        await cloudinary.uploader.destroy(
+
+          `${CLOUDINARY_FOLDER}/${config.publicId}`,
+
+          {
+            resource_type: "image",
+            invalidate: true
+          }
+
+        );
+
+
+      res.json({
+
+        success: true,
+
+        message:
+          `${config.name} deleted successfully`,
+
+        result:
+          result.result
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "IMAGE DELETE ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        success: false,
+        message: "Image deletion failed"
+
+      });
+
+    }
+
+  }
+);
+
+
+// ========================================
+// PUBLIC WEBSITE IMAGES
+// ========================================
+
+app.get(
+  "/api/site-images",
+  async (req, res) => {
+
+    try {
+
+      const images = {};
+
+
+      for (const [slot, config] of Object.entries(IMAGE_SLOTS)) {
+
+        try {
+
+          const result =
+            await cloudinary.api.resource(
+              `${CLOUDINARY_FOLDER}/${config.publicId}`,
+              {
+                resource_type: "image"
+              }
+            );
+
+
+          images[slot] =
+            result.secure_url;
+
+        } catch (error) {
+
+          images[slot] = "";
+
+        }
+
+      }
+
+
+      res.json({
+
+        success: true,
+        images
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "PUBLIC IMAGES ERROR:",
+        error
+      );
+
+      res.status(500).json({
+
+        success: false,
+        message: "Unable to load images"
+
+      });
+
+    }
+
+  }
+);
+
+
+// ========================================
 // TEST
-// ==========================
+// ========================================
 
 app.get("/api/test", (req, res) => {
 
   res.json({
 
     success: true,
-
-    message:
-      "LUXORA server is working"
+    message: "LUXORA server is working"
 
   });
 
 });
 
 
-// ==========================
+// ========================================
 // HOME
-// ==========================
+// ========================================
 
 app.get("/", (req, res) => {
 
@@ -343,9 +656,9 @@ app.get("/", (req, res) => {
 });
 
 
-// ==========================
+// ========================================
 // START SERVER
-// ==========================
+// ========================================
 
 app.listen(PORT, () => {
 
